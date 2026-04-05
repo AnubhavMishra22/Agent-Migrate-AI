@@ -1,0 +1,21 @@
+---
+description: GitHub PR/issue descriptions — plain text, no fancy markdown
+alwaysApply: true
+---
+
+# GitHub PR and issue descriptions
+
+Use **plain English** and **simple layout**. Avoid confusing punctuation and heavy Markdown.
+
+**Do**
+
+- Short paragraphs and simple bullet lines.
+- Command names spelled out on their own lines when helpful, e.g. write: run npm install, then npm run typecheck, then npm run dev (set DATABASE_URL in .env first).
+
+**Avoid**
+
+- Triple backticks (code fences) and `bash` / ` ``` ` blocks in PR bodies unless the user explicitly wants them.
+- Backslash-heavy escaping that can show up as weird symbols in the UI.
+- Over-formatting with slashes or special symbols where normal sentences work.
+
+If verification steps are needed, one line per step in plain language is enough.
