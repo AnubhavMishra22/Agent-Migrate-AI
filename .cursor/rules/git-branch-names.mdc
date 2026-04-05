@@ -3,6 +3,17 @@ description: Git branch naming — Pascal-Case segments and hyphens
 alwaysApply: true
 ---
 
+# Creating branches (permission)
+
+Do **not** create, rename, or delete a branch **unless** one of these is true:
+
+1. The user **explicitly asked** for that branch operation in the current task, or  
+2. It matches the **structured workflow** the user defined for this repo: **`main`**, the **phase integration branch** (e.g. `Phase1/Core-Migration-Engine`), or a **step branch** cut from that phase branch (e.g. `Step1/Project-Setup`, `Step2/Db-Connection-Reader`), using only the **agreed step names** — and the user has said work for that step/phase may proceed.
+
+Otherwise **ask the user first** before creating any branch (including `fix/`, `experiment`, `temp`, `backup`, etc.).
+
+---
+
 # Branch naming
 
 Use **PascalCase words separated by hyphens** for each path segment (Title Case style, not `camelCase` or `lowercase`).
