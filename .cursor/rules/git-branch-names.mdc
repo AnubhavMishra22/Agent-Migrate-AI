@@ -16,6 +16,8 @@ Otherwise **ask the user first** before creating any branch (including `fix/`, `
 
 # Branch naming
 
+**Project note:** Lowercase **kebab-case** branch names are common in many repos and avoid case issues on Windows/macOS. This project still uses **Pascal-Case segments with hyphens** (for example Project-Setup) because that is the maintainer’s structured naming workflow. Contributors on case-insensitive systems should use the two-step rename in the Windows section below when only changing capitalization.
+
 Use **PascalCase words separated by hyphens** for each path segment (Title Case style, not `camelCase` or `lowercase`).
 
 **Examples**

@@ -5,6 +5,8 @@ alwaysApply: true
 
 # Commit messages
 
+**Project note:** This repository intentionally uses Title Case labels (Feature:, Fix:, …) instead of the Conventional Commits lowercase prefixes (feat:, fix:, …). That matches the maintainer’s preference for readable messages. If automated changelog or versioning tools are added later, they can be configured for this format or we can add a mapping step—no change required for day-to-day work.
+
 Use a **capitalized label** followed by a **colon and space**, then a short description in plain language.
 
 **Use these (examples):**
