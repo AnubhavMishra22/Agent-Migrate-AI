@@ -1,0 +1,28 @@
+---
+description: Commit message format — Title Case labels, no chore/feat lowercase prefixes
+alwaysApply: true
+---
+
+# Commit messages
+
+Use a **capitalized label** followed by a **colon and space**, then a short description in plain language.
+
+**Use these (examples):**
+
+- `Init:` — first setup of files or configuration  
+- `Feature:` — new behavior or API  
+- `Fix:` — bug or error correction  
+- `Refactor:` — internal change, same outward behavior  
+- `Docs:` — comments or documentation  
+- `Test:` — tests or manual test helpers  
+
+**Do not use**
+
+- `chore:` (avoid; use `Init:` or `Feature:` depending on what changed)  
+- Lowercase **Conventional Commits**–style tags such as `feat:`, `fix:`, `chore:` — prefer **`Feature:`**, **`Fix:`**, **`Init:`**, etc.
+
+**Examples**
+
+- `Init: create package.json and tsconfig with strict mode`  
+- `Feature: add checkpoint reader with FOR UPDATE lock`  
+- `Fix: handle null metadata in checkpoint JSONB`  
