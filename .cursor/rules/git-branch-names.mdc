@@ -1,0 +1,30 @@
+---
+description: Git branch naming — Pascal-Case segments and hyphens
+alwaysApply: true
+---
+
+# Branch naming
+
+Use **PascalCase words separated by hyphens** for each path segment (Title Case style, not `camelCase` or `lowercase`).
+
+**Examples**
+
+- `Project-Setup`
+- `Phase1/Core-Migration-Engine`
+- `Step2/Db-Connection-Reader`
+- `Step5/Writer-Rollback`
+
+**Rules**
+
+- Use a **slash** only to separate workflow levels (e.g. phase vs step), not inside a single segment name.
+- Avoid extra prefixes such as `feature/`, `fix/`, or `hotfix/` unless the user explicitly asks.
+- Do **not** invent branch types outside the agreed phase/step list.
+
+**Windows (case-only renames)**
+
+Git on Windows may treat `branch-name` and `Branch-Name` as the same ref. To rename only casing, use a temporary name:
+
+```text
+git branch -m Old-Name temp-rename-branch
+git branch -m temp-rename-branch New-Name
+```
