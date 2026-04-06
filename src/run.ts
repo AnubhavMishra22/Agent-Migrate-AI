@@ -4,7 +4,7 @@ import { runCheckpointMigration } from "./runner.js";
 import migration from "../migrations/001_rename_field.js";
 
 async function main(): Promise<void> {
-  console.log("[AgentMigrate] Phase 1 — checkpoint migration run");
+  console.log("[AgentMigrate] checkpoint migration run");
   const pool = createPool();
   const client = await pool.connect();
 
