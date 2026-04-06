@@ -17,9 +17,9 @@ async function main(): Promise<void> {
     const rows = await getAllCheckpoints(client);
     console.log(`Found ${String(rows.length)} checkpoints to migrate`);
 
-    const results = runMigration(rows, up);
-    const ok = results.filter((r) => r.success).length;
-    const bad = results.filter((r) => !r.success).length;
+    const results = await runMigration(client, rows, up);
+    const ok = results.reduce((acc, r) => acc + (r.success ? 1 : 0), 0);
+    const bad = results.length - ok;
     console.log(`Results: ${String(ok)} ok, ${String(bad)} errors`);
     for (const r of results) {
       if (!r.success) {
