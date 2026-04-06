@@ -17,6 +17,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Thi
 
 ## [0.1.0] — 2026-04-06
 
+_Initial baseline; section date matches the git author date of the first docs commit on `Project-Setup` (`139333c`)._
+
 ### Added
 
 - Node.js **>= 20**, **ESM** (`"type": "module"`), **TypeScript** with `strict` compiler options.

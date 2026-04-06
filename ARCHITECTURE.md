@@ -58,7 +58,7 @@ The tool targets a **`checkpoints`** table compatible with typical LangGraph Pos
 | `thread_id` | Row identity (with `checkpoint_ns`, `checkpoint_id`) |
 | `checkpoint_ns` | Namespace segment |
 | `checkpoint_id` | Checkpoint id |
-| `parent_checkpoint_id` | Present on read; passed through only if your migration keeps it inside JSON |
+| `parent_checkpoint_id` | Present on read and passed to migrations on `MigrationContext.row`. The column is **not** in the `UPDATE` in `runner.ts`, so its value is **preserved in the database** automatically (only `checkpoint` and `metadata` are written). |
 | `checkpoint` | **JSONB** — primary migration surface |
 | `metadata` | **JSONB** — validated and written together with `checkpoint` |
 
@@ -111,8 +111,10 @@ _Add a row for each merged step (or phase milestone) you want reflected in the d
 
 | Date | Phase | Step / milestone | Notes |
 |------|-------|------------------|--------|
-| 2026-04-06 | Project setup | Toolchain + changelog | `CHANGELOG.md`, Node 20 ESM, `pg` / `dotenv` / `zod`, `migrate` / `dev` scripts |
-| 2026-04-07 | Project setup | Architecture doc | This file; aligns with `run.ts`, transactional runner, Zod validation |
+| 2026-04-06 | Project setup | Toolchain + changelog | `CHANGELOG.md`, Node 20 ESM, `pg` / `dotenv` / `zod`, `migrate` / `dev` scripts (commit `139333c`) |
+| 2026-04-06 | Project setup | Architecture doc | This file; `run.ts`, transactional runner, Zod validation (commit `4a94da3`) |
+
+_Dates use the **author date** (YYYY-MM-DD) of the corresponding commits on `Project-Setup`._
 
 ---
 
