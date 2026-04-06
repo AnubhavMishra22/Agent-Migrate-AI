@@ -11,6 +11,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Thi
 ### Added
 
 - `CHANGELOG.md` — living history of project and setup changes (this file).
+- `ARCHITECTURE.md` — module map, transactional migration flow, and progress log for the **Project-Setup** layout (`run.ts`, `runner.ts`, Zod, `FOR UPDATE`).
 
 ---
 
@@ -36,4 +37,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Thi
 
 ## Related docs
 
-- **`ARCHITECTURE.md`** (when present) — module layout and runtime flow; update alongside this file when structure changes.
+- **`ARCHITECTURE.md`** — module layout and runtime flow; update alongside this file when structure changes.
