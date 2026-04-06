@@ -6,6 +6,8 @@
 
 import { getClient, pool } from "./db.js";
 import { getAllCheckpoints } from "./reader.js";
+import { runMigration } from "./runner.js";
+import { up } from "../migrations/001_rename_field.js";
 import type { PoolClient } from "pg";
 
 async function main(): Promise<void> {
@@ -14,6 +16,16 @@ async function main(): Promise<void> {
     client = await getClient();
     const rows = await getAllCheckpoints(client);
     console.log(`Found ${String(rows.length)} checkpoints to migrate`);
+
+    const results = runMigration(rows, up);
+    const ok = results.filter((r) => r.success).length;
+    const bad = results.filter((r) => !r.success).length;
+    console.log(`Results: ${String(ok)} ok, ${String(bad)} errors`);
+    for (const r of results) {
+      if (!r.success) {
+        console.error(`  ${r.checkpointId}: ${r.error ?? "unknown error"}`);
+      }
+    }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Error:", message);
