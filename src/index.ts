@@ -4,7 +4,7 @@
  * postgresql://postgres:[PASSWORD]@[HOST]:5432/postgres
  */
 
-import { getClient } from "./db.js";
+import { getClient, pool } from "./db.js";
 import { getAllCheckpoints } from "./reader.js";
 import type { PoolClient } from "pg";
 
@@ -13,7 +13,7 @@ async function main(): Promise<void> {
   try {
     client = await getClient();
     const rows = await getAllCheckpoints(client);
-    console.log(`Checkpoint count: ${String(rows.length)}`);
+    console.log(`Found ${String(rows.length)} checkpoints to migrate`);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Error:", message);
@@ -21,6 +21,7 @@ async function main(): Promise<void> {
   } finally {
     client?.release();
   }
+  await pool.end();
 }
 
 void main();

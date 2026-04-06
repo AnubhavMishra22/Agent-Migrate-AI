@@ -46,11 +46,7 @@ export async function getAllCheckpoints(
     ORDER BY checkpoint_id ASC
     `
   );
-  const rows: CheckpointRow[] = result.rows.map((row) =>
-    mapRow(row as Record<string, unknown>)
-  );
-  console.log(`Found ${String(rows.length)} checkpoints to migrate`);
-  return rows;
+  return result.rows.map((row) => mapRow(row as Record<string, unknown>));
 }
 
 export async function getCheckpointsByThread(
