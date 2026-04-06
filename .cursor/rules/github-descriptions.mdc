@@ -3,6 +3,22 @@ description: GitHub PR/issue descriptions — plain text, no fancy markdown
 alwaysApply: true
 ---
 
+# Pull request titles (phase vs step)
+
+The **base branch** (for example `Phase1/Core-Migration-Engine`) already shows **which phase** the PR belongs to. The PR **title** should make the **step** obvious.
+
+**Format:** start with **`Step N:`** (digit and colon), then a short description of what the PR does. Do **not** put the phase name in the title (avoid repeating “Phase 1” in the heading).
+
+**Examples**
+
+- Step 1: Core migration engine scaffold  
+- Step 2: PostgreSQL pool and checkpoint reader  
+- Step 3: Migration runner and transactional updates  
+
+Use the step number that matches the work in the project plan.
+
+---
+
 # GitHub PR and issue descriptions
 
 Use **plain English** and **simple layout**. Avoid confusing punctuation and heavy Markdown.
