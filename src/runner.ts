@@ -59,9 +59,7 @@ export function runMigration(
 
   const succeeded = results.filter((r) => r.success).length;
   const failed = results.filter((r) => !r.success).length;
-  console.log(
-    `Migration finished: ${String(succeeded)} succeeded, ${String(failed)} failed`
-  );
+  console.log(`${String(succeeded)} succeeded, ${String(failed)} failed`);
 
   return results;
 }
