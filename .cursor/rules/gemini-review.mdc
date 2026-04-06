@@ -1,0 +1,17 @@
+---
+description: When user says Gemini comments — fix, reply, resolve
+alwaysApply: true
+---
+
+# Gemini code review (trigger phrase)
+
+When the user says **Gemini comments** (or similar: “gemini review”, “address Gemini”), treat it as a single workflow:
+
+1. **Find** the relevant open PR(s) (usually the current branch’s PR) and load **gemini-code-assist** inline comments and any review summary.
+2. **Fix** the codebase to address each piece of feedback that should be implemented (skip only what conflicts with an explicit project rule; then explain in the reply).
+3. **Reply** to **each** inline comment **individually** with a short note on what you changed or why you did not change it.
+4. **Resolve** each review **conversation** on GitHub after the fix is in (use the GraphQL `resolveReviewThread` API or the UI-equivalent so threads show as resolved).
+
+Also **commit and push** the fixes to the appropriate branch when applicable.
+
+This phrase always means the full loop above, not “only list the comments.”
