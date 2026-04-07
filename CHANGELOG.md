@@ -18,7 +18,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Thi
 ### Changed
 
 - `ARCHITECTURE.md` — aligned with **Phase 1** on `main` (`index.ts`, `runMigration`, `writer`, `channel_values` migrations) so docs match the code after integrating `main` into the **Project-Setup** PR branch.
-- `README.md` — shortened to overview + links (`migrations/001_rename_field.ts`, `ARCHITECTURE.md`, `docs/sample-checkpoints.sql`); quick start in one code block; no large inline TypeScript/SQL samples.
+- `README.md` — short overview + links; keeps original narrative (problem, Alembic analogy, #536 Sept 2024, solution/roadmap, five-step intent, phases 1–4, stack, why/author) without large inline code blocks; sample SQL stays in `docs/sample-checkpoints.sql`.
 
 ---
 
