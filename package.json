@@ -2,6 +2,10 @@
   "name": "agentmigrate",
   "version": "0.1.0",
   "description": "Schema migrations for AI agent checkpoints",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnubhavMishra22/Agent-Migrate-AI.git"
+  },
   "type": "module",
   "main": "dist/src/index.js",
   "engines": {
