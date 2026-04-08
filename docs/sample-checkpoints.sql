@@ -11,7 +11,14 @@ CREATE TABLE IF NOT EXISTS checkpoints (
   PRIMARY KEY (thread_id, checkpoint_ns, checkpoint_id)
 );
 
-INSERT INTO checkpoints VALUES
+INSERT INTO checkpoints (
+  thread_id,
+  checkpoint_ns,
+  checkpoint_id,
+  parent_checkpoint_id,
+  checkpoint,
+  metadata
+) VALUES
   ('thread-1', '', 'cp-001', null,
    '{"v": 1, "channel_values": {"user_query": "hello world", "status": "pending"}}',
    '{}'),
