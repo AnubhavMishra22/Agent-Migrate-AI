@@ -4,15 +4,25 @@
 
 ## The problem
 
-When you change a LangGraph agent (renamed fields, new required state, tool schema changes), workflows that were paused mid-run often **fail on resume** because checkpoints in PostgreSQL are **frozen JSON**. There is still no first-class LangGraph tool for upgrading that stored state. See [langgraphjs#536](https://github.com/langchain-ai/langgraphjs/issues/536).
+When you update a LangGraph AI agent — rename a parameter, add a required field, change a tool’s schema — workflows that were **paused mid-execution** often **crash on resume**. LangGraph stores state as **checkpoints** (serialized JSON in PostgreSQL); when your code changes, old snapshots no longer match the new shape. There is **no built-in** upgrade path: you either **wait** for every in-flight workflow to finish (sometimes **hours or days**), **script it yourself**, or **lose in-progress work**.
 
-## What this project does
+This gap is still open in the ecosystem. See [GitHub issue #536](https://github.com/langchain-ai/langgraphjs/issues/536) (LangGraph JS, **September 2024**) — **no first-class fix to this day**.
 
-AgentMigrate applies a **migration function** to each checkpoint’s **`channel_values`**, merges the result back into the checkpoint JSON, and **writes** it with one `UPDATE` per row. Phase 1 is intentionally small: read → transform → persist, with per-row error reporting (not a single global transaction yet). **Zod** is a dependency for **planned** validation; the current runner does not run schema checks on each row.
+## The solution
 
-- **Example migration:** [`migrations/001_rename_field.ts`](migrations/001_rename_field.ts) (`meta`, `up` / `down` on `Record<string, unknown>`).
-- **How it’s wired:** [`src/index.ts`](src/index.ts) loads checkpoints and calls `runMigration` with your `up` function.
-- **Deeper detail:** [`ARCHITECTURE.md`](ARCHITECTURE.md).
+AgentMigrate brings the **database-migration pattern** to agent state: you define how to transform stored state (see [`migrations/001_rename_field.ts`](migrations/001_rename_field.ts) for `meta`, `up`, and `down` on `channel_values`-shaped data), and the engine walks your checkpoints and applies it.
+
+**Today (Phase 1):** read checkpoints → run `up` on each row’s **`channel_values`** → merge → **one `UPDATE` per row**; failures are **per-row** (other rows still save). **Zod** is already a dependency for **upcoming** row validation; the runner does not enforce a schema on every row yet.
+
+**Where we’re headed:** validate migrated payloads with **Zod**, optional **all-or-nothing** transactions, and a **single CLI** (e.g. `agentmigrate run`). Right now you run **`npm run build && npm start`** (or **`npm run dev`** for watch mode). Wiring lives in [`src/index.ts`](src/index.ts); design notes in [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+### How it works (intent)
+
+1. **Read** — load checkpoint rows from PostgreSQL (LangGraph-style `checkpoints` table).  
+2. **Migrate** — run your **`up`** on each checkpoint’s **`channel_values`**.  
+3. **Validate** *(planned)* — Zod-check each migrated payload before write.  
+4. **Write** — persist updated checkpoint JSON (**per row today**; transactional “all rows” mode planned).  
+5. **Rollback** *(planned)* — full run rolls back if anything fails, once that mode exists.
 
 ## Quick start
 
@@ -20,36 +30,43 @@ AgentMigrate applies a **migration function** to each checkpoint’s **`channel_
 git clone https://github.com/AnubhavMishra22/Agent-Migrate-AI.git
 cd Agent-Migrate-AI
 npm install
-cp .env.example .env   # set DATABASE_URL
+cp .env.example .env   # set DATABASE_URL (e.g. Supabase)
 npm run build && npm start
 ```
 
 Dev (watch): `npm run dev`
 
-Optional test data: [`docs/sample-checkpoints.sql`](docs/sample-checkpoints.sql)
+Optional local test data (DDL + sample rows): [`docs/sample-checkpoints.sql`](docs/sample-checkpoints.sql)
 
 ## Status
 
-- [x] Phase 1: read, migrate `channel_values`, per-row write, summary
-- [ ] Phase 2: CLI (`init`, `run`, `status`)
-- [ ] Phase 3: demo UI
-- [ ] Phase 4: CI / GitHub Actions
+🚧 **Work in progress** — actively being built.
 
-## Stack
+- [x] Phase 1: Core migration engine (reading, migrating, writing; per-row persist + summary)
+- [ ] Phase 2: CLI with `init`, `run`, `status` (including a single command like **`agentmigrate run`**)
+- [ ] Phase 3: Demo UI to visualize migrations
+- [ ] Phase 4: CI/CD integration and GitHub Actions checks
 
-Node 20+, TypeScript (strict), PostgreSQL, Zod (for upcoming validation), aimed at LangGraph-style checkpoints.
+## Tech stack
 
-## Why it exists
+- **Runtime:** Node.js **20+** with **TypeScript** (strict mode)
+- **Database:** **PostgreSQL** (e.g. **Supabase**)
+- **Validation:** **Zod** (runner integration planned)
+- **Target framework:** **LangGraph**; **CrewAI** and **OpenAI Agents SDK** support **planned for Phase 2**
 
-Production teams today block deploys, write one-off scripts, or accept lost in-flight work. This repo is a small, reusable migration-shaped tool for that gap.
+## Why this exists
+
+Teams running LangGraph in production still solve this **manually** — blocking deploys, one-off scripts, or accepting lost in-flight work. AgentMigrate is meant to package a **reusable, safe, developer-friendly** approach.
 
 ## Author
 
-[Anubhav Mishra](https://github.com/AnubhavMishra22) — MS CS, UC Davis.
+Built by **[Anubhav Mishra](https://github.com/AnubhavMishra22)** — MS Computer Science, **UC Davis**. Backend and AI engineer.
 
 - GitHub: [github.com/AnubhavMishra22](https://github.com/AnubhavMishra22)
 - LinkedIn: [linkedin.com/in/anubhav-mishra-172726181](https://linkedin.com/in/anubhav-mishra-172726181)
 
 ---
 
-*See **CONTRIBUTING.md** for commits, branches, and PR conventions.*
+*More documentation will be added as the project is built.*
+
+See **CONTRIBUTING.md** for commit messages, branches, and PR conventions.
