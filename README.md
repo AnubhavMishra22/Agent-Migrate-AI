@@ -25,64 +25,83 @@ filed September 2024 — no solution exists to this day.
 
 AgentMigrate brings the database migration pattern to AI agent state.
 
-You write a migration file:
+You write a migration module (same shape as the example in the repo today):
 
 ```typescript
 // migrations/001_rename_field.ts
 
-export const meta = {
+export type MigrationMeta = {
+  version: number;
+  name: string;
+  description: string;
+};
+
+export const meta: MigrationMeta = {
   version: 1,
   name: "rename_user_query_to_query",
-  description: "Renames user_query to query in agent state"
+  description: "Renames the field user_query to query in agent state",
+};
+
+/** Transform one checkpoint's `channel_values` object. */
+export function up(state: Record<string, unknown>): Record<string, unknown> {
+  if (Object.prototype.hasOwnProperty.call(state, "query")) {
+    return { ...state };
+  }
+  if (!Object.prototype.hasOwnProperty.call(state, "user_query")) {
+    return { ...state };
+  }
+  const next: Record<string, unknown> = { ...state };
+  next.query = next.user_query;
+  delete next.user_query;
+  return next;
 }
 
-export function up(state: Record<string, unknown>) {
-  if ("user_query" in state) {
-    return { ...state, query: state.user_query, user_query: undefined }
+/** Inverse transform (for future rollback tooling — not invoked by Phase 1 entrypoint). */
+export function down(state: Record<string, unknown>): Record<string, unknown> {
+  if (Object.prototype.hasOwnProperty.call(state, "user_query")) {
+    return { ...state };
   }
-  return state
-}
-
-export function down(state: Record<string, unknown>) {
-  if ("query" in state) {
-    return { ...state, user_query: state.query, query: undefined }
+  if (!Object.prototype.hasOwnProperty.call(state, "query")) {
+    return { ...state };
   }
-  return state
+  const next: Record<string, unknown> = { ...state };
+  next.user_query = next.query;
+  delete next.query;
+  return next;
 }
 ```
 
-Then you run one command:
+Wire your `up` function in `src/index.ts`, then run:
 
 ```bash
-agentmigrate run
+npm run build
+npm start
 ```
 
-AgentMigrate reads every checkpoint from your PostgreSQL database, applies 
-your migration function to each one, validates the result with Zod, and 
-writes everything back inside a single transaction. If any checkpoint fails 
-validation, the entire operation rolls back automatically. Zero data loss. 
-Zero broken workflows.
+For development (watch mode):
+
+```bash
+npm run dev
+```
+
+Phase 1 reads every checkpoint, runs `up` on each row’s **`channel_values`**, merges the result back into the checkpoint JSON, and **persists with one `UPDATE` per row**. Rows that throw are recorded in the result summary; successful rows stay written. **Zod** is in the stack for upcoming validation work; the current runner does not parse migrations with a schema yet.
 
 ## How It Works
 
-Read checkpoints → Apply migration → Validate with Zod → Write in transaction
-↓ if any fail
-Auto rollback
-1. **Read** — connects to your PostgreSQL database and reads all checkpoint 
-   rows from LangGraph's checkpoints table
-2. **Migrate** — runs your `up()` function against the `channel_values` of 
-   every checkpoint
-3. **Validate** — checks every migrated state against your Zod schema before 
-   touching the database
-4. **Write** — updates all checkpoints inside a single PostgreSQL transaction
-5. **Rollback** — if anything fails at any step, reverts all changes 
-   automatically
+Read checkpoints → For each row: extract `channel_values` → `up(state)` → merge → `UPDATE` checkpoint JSONB
+
+1. **Read** — connects to PostgreSQL and loads checkpoint rows (see `src/reader.ts`).
+2. **Migrate** — `runMigration` calls your `up` with a shallow clone of **`checkpoint.channel_values`** (see `src/runner.ts`).
+3. **Write** — `writer.ts` runs `UPDATE checkpoints SET checkpoint = $1::jsonb` for that row.
+4. **Per-row errors** — if `up` or the database throws for a row, that checkpoint is reported as failed; other rows are unaffected.
+
+A global “all checkpoints in one transaction + Zod gate” is **planned** (see roadmap below); it is not what Phase 1 does today.
 
 ## Status
 
 🚧 **Work in progress** — actively being built.
 
-- [x] Phase 1: Core migration engine (reading, migrating, validating, writing)
+- [x] Phase 1: Core migration engine (read, transform `channel_values`, per-row persist, summary)
 - [ ] Phase 2: CLI tool with `init`, `run`, `status` commands
 - [ ] Phase 3: Demo UI to visualize migrations
 - [ ] Phase 4: CI/CD integration and GitHub Actions check
@@ -91,7 +110,7 @@ Auto rollback
 
 - **Runtime:** Node.js 20+ with TypeScript (strict mode)
 - **Database:** PostgreSQL (Supabase)
-- **Validation:** Zod
+- **Validation:** Zod (dependency today; runner-level validation planned)
 - **Target framework:** LangGraph (CrewAI and OpenAI Agents SDK support 
   coming in Phase 2)
 
@@ -99,8 +118,8 @@ Auto rollback
 
 ```bash
 # Clone the repo
-git clone https://github.com/AnubhavMishra22/agentmigrate.git
-cd agentmigrate
+git clone https://github.com/AnubhavMishra22/Agent-Migrate-AI.git
+cd Agent-Migrate-AI
 
 # Install dependencies
 npm install
@@ -109,8 +128,9 @@ npm install
 cp .env.example .env
 # Edit .env and add your Supabase DATABASE_URL
 
-# Run the engine
-npm run dev
+# Run the engine (build first for production entry)
+npm run build
+npm start
 ```
 
 To test without a LangGraph agent, run this SQL in your Supabase SQL editor 

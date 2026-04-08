@@ -16,6 +16,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Thi
 ### Changed
 
 - `ARCHITECTURE.md` — aligned with **Phase 1** on `main` (`index.ts`, `runMigration`, `writer`, `channel_values` migrations) so docs match the code after integrating `main` into the **Project-Setup** PR branch.
+- `README.md` — migration sample matches `migrations/001_rename_field.ts`; run instructions use `npm run build` / `npm start` / `npm run dev`; clone URL uses **Agent-Migrate-AI**; “how it works” matches per-row persistence (no global transaction / Zod gate in Phase 1 yet).
 
 ---
 
