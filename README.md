@@ -1,5 +1,3 @@
----
-
 # AgentMigrate
 
 **Schema migrations for AI agent checkpoints — like Alembic for databases, 
@@ -179,4 +177,4 @@ Science, UC Davis. Backend and AI engineer.
 
 *More documentation will be added as the project is built.*
 
----
+See **CONTRIBUTING.md** for commit messages, branches, and PR conventions.

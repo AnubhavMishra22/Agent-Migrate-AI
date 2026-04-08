@@ -1,9 +1,0 @@
----
-description: Contributors and attribution — owner GitHub username only
-alwaysApply: true
----
-
-# Contributors and attribution
-
-- **Never** add AI assistants, tools, or automated agents (e.g. Cursor, Copilot, ChatGPT, “Assistant”) to `CONTRIBUTORS`, `AUTHORS`, `package.json` `author`/`contributors`, README credits, or similar.
-- If contributor or author metadata is needed, use **only** the project owner’s GitHub username: **AnubhavMishra22** (same as this repo’s owner). Do not add other identities.

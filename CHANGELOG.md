@@ -12,11 +12,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Thi
 
 - `README.md` — problem statement, solution overview, setup, sample SQL, author links.
 - `package.json` — **`repository`** URL for the canonical GitHub repo.
+- `CONTRIBUTING.md` — commit messages, branch naming, PR style, attribution (replaces shared `.cursor` rules in-repo).
 
 ### Changed
 
 - `ARCHITECTURE.md` — aligned with **Phase 1** on `main` (`index.ts`, `runMigration`, `writer`, `channel_values` migrations) so docs match the code after integrating `main` into the **Project-Setup** PR branch.
-- `README.md` — migration sample matches `migrations/001_rename_field.ts`; run instructions use `npm run build` / `npm start` / `npm run dev`; clone URL uses **Agent-Migrate-AI**; “how it works” matches per-row persistence (no global transaction / Zod gate in Phase 1 yet).
+- `README.md` — migration sample matches `migrations/001_rename_field.ts`; run instructions use `npm run build` / `npm start` / `npm run dev`; clone URL uses **Agent-Migrate-AI**; “how it works” matches per-row persistence (no global transaction / Zod gate in Phase 1 yet); footer uses a mid-file horizontal rule only (no YAML front matter at top).
 
 ---
 
