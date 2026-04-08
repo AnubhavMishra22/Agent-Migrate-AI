@@ -173,4 +173,8 @@ Science, UC Davis. Backend and AI engineer.
 - GitHub: [github.com/AnubhavMishra22](https://github.com/AnubhavMishra22)
 - LinkedIn: [linkedin.com/in/anubhav-mishra-172726181](https://linkedin.com/in/anubhav-mishra-172726181)
 
+---
+
 *More documentation will be added as the project is built.*
+
+See **CONTRIBUTING.md** for commit messages, branches, and PR conventions.
